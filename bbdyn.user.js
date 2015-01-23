@@ -265,4 +265,6 @@ parseUserGroupList();
 
 amendMenu();
 
+window.top.document.title = document.title;
+
 // vim: set ts=4 sw=4 sts=4 et:
