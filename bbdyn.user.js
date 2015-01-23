@@ -67,6 +67,17 @@ function add_json_as_textarea(node, data) {
     return textarea;
 }
 
+function match_word(user, word) {
+    var n = parseInt(word);
+    if (n === n) {
+        // Is an int
+        var re = new RegExp('\\b' + word + '\\b');
+        return !!re.exec(user.search);
+    } else {
+        return user.search.indexOf(word) !== -1;
+    }
+}
+
 function make_search_form(textarea, rows, users) {
     var form, query;
     form = document.createElement('form');
@@ -87,7 +98,7 @@ function make_search_form(textarea, rows, users) {
         for (i = 0; i < rows.length; i += 1) {
             match = true;
             for (j = 0; j < words.length; j += 1) {
-                if (users[i].search.indexOf(words[j]) === -1) {
+                if (!match_word(users[i], words[j])) {
                     match = false;
                 }
             }
