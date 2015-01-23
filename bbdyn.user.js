@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name        Improvements to "All users in groups" in BlackBoard
+// @name        Improvements to BlackBoard for instructors and TAs
 // @namespace   http://users-cs.au.dk/rav/
 // @description Adds live filtering and search form redisplay
-// @include     https://bb.au.dk/webapps/bb-group-mgmt-LEARN/execute/groupInventoryList?*toggleType=users*
+// @include     https://bb.au.dk/*
 // @version     1
 // @grant       none
 // ==/UserScript==
@@ -165,8 +165,18 @@ function extract_groups(users) {
 	return groups;
 }
 
-function parseUserGroupList(userGroupList) {
-	// userGroupList is <div id="userGroupList">
+function parseUserGroupList() {
+	var targetPage = '/webapps/bb-group-mgmt-LEARN/execute/groupInventoryList';
+	if (location.pathname != targetPage)
+		return;
+	if (location.search.indexOf('toggleType=users') == -1)
+		return;
+
+	var userGroupList = document.getElementById('userGroupList');
+	if (!userGroupList) {
+		console.log("Could not find #userGroupList");
+		return;
+	}
 
 	var tbody = document.getElementById('userGroupList_databody');
 	var rows = [].slice.call(tbody.rows);
@@ -189,11 +199,31 @@ function parseUserGroupList(userGroupList) {
 	}
 }
 
-var userGroupList = document.getElementById('userGroupList');
-if (userGroupList) {
-	parseUserGroupList(userGroupList);
-} else {
-	console.log("userGroupList not found");
+function amendMenu() {
+	var existingMenuItem = document.querySelector(
+		"[id='controlpanel.users.and.groups']");
+	if (existingMenuItem) {
+		var ul = existingMenuItem.parentNode;
+		console.log(ul);
+		var h4 = document.createElement('h4');
+		var li = document.createElement('li');
+		var a = document.createElement('a');
+		a.style.background = 'none';
+
+		var courseId = /course_id=[^&;]+/.exec(location.search)[0];
+		a.href = ('/webapps/bb-group-mgmt-LEARN/execute/groupInventoryList?'
+				+ courseId + '&chkAllRoles=all&showAll=true&toggleType=users'
+				+ '&liveFilterOnly=jatak');
+		a.target = 'content';
+		a.textContent = TR['title'];
+		h4.appendChild(a);
+		li.appendChild(h4);
+		ul.insertBefore(li, existingMenuItem.nextSibling);
+	}
 }
+
+parseUserGroupList();
+
+amendMenu();
 
 // vim: set ts=2 sw=2 sts=2 noet:
