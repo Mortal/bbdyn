@@ -113,6 +113,7 @@ function make_search_form(textarea, rows, users) {
     query.addEventListener('change', update, false);
     query.addEventListener('input', update, false);
     form.appendChild(query);
+    update();
     return form;
 }
 
