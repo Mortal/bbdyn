@@ -16,6 +16,7 @@ if (LANG === 'en-GB') {
         'showAll': 'All on 1 page',
         'liveQuery': 'Filter:',
         'title': 'Find people in groups',
+        'paging': 'Displaying <strong>{m}</strong> of <strong>{n}</strong>; {roles}',
         '': ''
     };
 } else {
@@ -23,6 +24,7 @@ if (LANG === 'en-GB') {
         'showAll': 'Alle på 1 side',
         'liveQuery': 'Filter:',
         'title': 'Søg brugere i grupper',
+        'paging': 'Viser <strong>{m}</strong> af <strong>{n}</strong>; {roles}',
         '': ''
     };
 }
@@ -93,9 +95,13 @@ function make_search_form(textarea, rows, users) {
         var q = query.value.trim().toLowerCase().replace(/ +/g, ' '),
             words = q.split(' '),
             selected = [],
+            selectedCount = 0,
+            selectedCountRoles = {},
             i,
             j,
             match;
+
+        // Show/hide rows one by one
         for (i = 0; i < rows.length; i += 1) {
             match = true;
             for (j = 0; j < words.length; j += 1) {
@@ -106,9 +112,38 @@ function make_search_form(textarea, rows, users) {
             rows[i].style.display = match ? '' : 'none';
             if (match) {
                 selected.push(users[i]);
+                selectedCount += 1;
+                selectedCountRoles[users[i].role] =
+                    (selectedCountRoles[users[i].role] || 0) + 1;
             }
         }
+
+        // For debugging / further processing
         textarea.value = JSON.stringify(selected);
+
+        // Update paging text
+        var selectedRoles = [];
+        for (var role in selectedCountRoles) {
+            selectedRoles.push(role);
+        }
+        selectedRoles.sort();
+        for (var i = 0; i < selectedRoles.length; i += 1) {
+            var role = selectedRoles[i];
+            var c = selectedCountRoles[role];
+            role = role.toLowerCase();
+            selectedRoles[i] = c + ' ' + role;
+        }
+
+        var paging = (TR.paging
+            .replace('{m}', selectedCount)
+            .replace('{n}', rows.length)
+            .replace('{roles}', selectedRoles.join(', ')));
+
+        var itemcount = document.getElementById('userGroupList_itemcount');
+
+        if (itemcount) {
+            itemcount.innerHTML = paging;
+        }
     }
     query.addEventListener('change', update, false);
     query.addEventListener('input', update, false);
