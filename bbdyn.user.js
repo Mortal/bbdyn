@@ -194,7 +194,9 @@ function redisplay_form(bbSearchForm) {
         return !!el.name;
     });
 
-    bbSearchForm.match.selectedIndex = 0;
+    if (bbSearchForm.match) {
+        bbSearchForm.match.selectedIndex = 0;
+    }
     for (i = 0; i < elements.length; i += 1) {
         // The search form has three kinds of fields: select, text and checkbox.
         el = elements[i];
