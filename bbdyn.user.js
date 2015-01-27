@@ -284,7 +284,6 @@ function amendMenu() {
     );
     if (existingMenuItem) {
         var ul = existingMenuItem.parentNode;
-        console.log(ul);
         var h4 = document.createElement('h4');
         var li = document.createElement('li');
         var a = document.createElement('a');
