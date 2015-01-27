@@ -281,7 +281,6 @@ function get_course_id() {
 
 function get_edit_mode() {
     var modeSwitch = document.getElementById('editModeToggleLink');
-    alert(modeSwitch.className);
     return modeSwitch.classList.contains('read-on');
 }
 
@@ -304,8 +303,6 @@ function switch_to_edit_mode(href) {
         '&courseId=' + get_course_id() +
         '&mode=designer');
 
-    alert("GET " + url);
-
     GM_xmlhttpRequest({
         method: 'GET',  // should be POST?
         url: url,
@@ -316,11 +313,9 @@ function switch_to_edit_mode(href) {
 function load_a_in_edit_mode(event) {
     if (get_edit_mode()) {
         // Permit default
-        alert("Permit default");
     } else {
         event.preventDefault();
         event.stopPropagation();
-        alert("Switch to "+event.target.href);
         switch_to_edit_mode(event.target.href);
     }
 }
