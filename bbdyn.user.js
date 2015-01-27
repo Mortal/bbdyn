@@ -3,7 +3,7 @@
 // @namespace   http://users-cs.au.dk/rav/
 // @description Adds live filtering and search form redisplay
 // @include     https://bb.au.dk/*
-// @version     0.2
+// @version     0.2.1
 // @grant       GM_xmlhttpRequest
 // @grant       GM_log
 // @updateURL   https://github.com/Mortal/bbdyn/raw/stable/bbdyn.user.js
