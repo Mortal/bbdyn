@@ -274,6 +274,10 @@ function parseUserGroupList() {
     }
 }
 
+function get_course_id() {
+    return /course_id=([_0-9]+)/.exec(location.search)[1];
+}
+
 function amendMenu() {
     var existingMenuItem = document.querySelector(
         "[id='controlpanel.users.and.groups']"
@@ -286,10 +290,11 @@ function amendMenu() {
         var a = document.createElement('a');
         a.style.background = 'none';
 
-        var courseId = /course_id=[_0-9]+/.exec(location.search)[0];
-        a.href = ('/webapps/bb-group-mgmt-LEARN/execute/groupInventoryList?'
-                + courseId + '&chkAllRoles=all&showAll=true&toggleType=users'
-                + '&liveFilterOnly=jatak');
+        var courseId = get_course_id();
+        a.href = ('/webapps/bb-group-mgmt-LEARN/execute/groupInventoryList' +
+                  '?course_id=' + courseId +
+                  '&chkAllRoles=all&showAll=true&toggleType=users' +
+                  '&liveFilterOnly=jatak');
         a.target = 'content';
         a.textContent = TR.title;
         h4.appendChild(a);
