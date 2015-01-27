@@ -4,7 +4,8 @@
 // @description Adds live filtering and search form redisplay
 // @include     https://bb.au.dk/*
 // @version     0.2pre1
-// @grant       none
+// @grant       GM_xmlhttpRequest
+// @grant       GM_log
 // @updateURL   https://github.com/Mortal/bbdyn/raw/stable/bbdyn.user.js
 // ==/UserScript==
 
@@ -278,6 +279,52 @@ function get_course_id() {
     return /course_id=([_0-9]+)/.exec(location.search)[1];
 }
 
+function get_edit_mode() {
+    var modeSwitch = document.getElementById('editModeToggleLink');
+    alert(modeSwitch.className);
+    return modeSwitch.classList.contains('read-on');
+}
+
+function switch_to_edit_mode(href) {
+    function onload(response) {
+        GM_log([
+            response.status,
+            response.statusText,
+            response.readyState,
+            response.responseHeaders,
+            response.responseText,
+            response.finalUrl
+        ].join("\n"));
+
+        location.href = href;
+    }
+
+    var url = ('/webapps/blackboard/execute/doCourseMenuAction' +
+        '?cmd=setDesignerParticipantViewMode' +
+        '&courseId=' + get_course_id() +
+        '&mode=designer');
+
+    alert("GET " + url);
+
+    GM_xmlhttpRequest({
+        method: 'GET',  // should be POST?
+        url: url,
+        onload: onload
+    });
+}
+
+function load_a_in_edit_mode(event) {
+    if (get_edit_mode()) {
+        // Permit default
+        alert("Permit default");
+    } else {
+        event.preventDefault();
+        event.stopPropagation();
+        alert("Switch to "+event.target.href);
+        switch_to_edit_mode(event.target.href);
+    }
+}
+
 function amendMenu() {
     var existingMenuItem = document.querySelector(
         "[id='controlpanel.users.and.groups']"
@@ -296,6 +343,7 @@ function amendMenu() {
                   '&liveFilterOnly=jatak');
         a.target = 'content';
         a.textContent = TR.title;
+        a.addEventListener('click', load_a_in_edit_mode, false);
         h4.appendChild(a);
         li.appendChild(h4);
         ul.insertBefore(li, existingMenuItem.nextSibling);
