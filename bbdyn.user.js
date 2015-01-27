@@ -18,6 +18,7 @@ if (LANG === 'en-GB') {
         'liveQuery': 'Filter:',
         'title': 'Find people in groups',
         'paging': 'Displaying <strong>{m}</strong> of <strong>{n}</strong>; {roles}',
+        'choose_group': '(choose group)',
         '': ''
     };
 } else {
@@ -26,6 +27,7 @@ if (LANG === 'en-GB') {
         'liveQuery': 'Filter:',
         'title': 'Søg brugere i grupper',
         'paging': 'Viser <strong>{m}</strong> af <strong>{n}</strong>; {roles}',
+        'choose_group': '(vælg gruppe)',
         '': ''
     };
 }
@@ -82,16 +84,29 @@ function match_word(user, word) {
     }
 }
 
-function make_search_form(textarea, rows, users) {
-    var form, query;
+function make_search_form(textarea, rows, users, groups) {
+    var form, query, group;
     form = document.createElement('form');
     form.innerHTML = (
         '<label for="live_query"><b>' +
         TR.liveQuery + '</b></label> '
     );
     form.style.margin = '0 14px';
+
     query = document.createElement('input');
     query.id = 'live_query';
+
+    group = document.createElement('select');
+    function add_option(v) {
+        var opt = document.createElement('option');
+        opt.textContent = v;
+        group.appendChild(opt);
+    }
+    add_option(TR.choose_group);
+    for (var i = 0; i < groups.length; i += 1) {
+        add_option(groups[i].replace(/ +/g, ' '));
+    }
+
     function update() {
         var q = query.value.trim().toLowerCase().replace(/ +/g, ' '),
             words = q.split(' '),
@@ -107,6 +122,15 @@ function make_search_form(textarea, rows, users) {
             match = true;
             for (j = 0; j < words.length; j += 1) {
                 if (!match_word(users[i], words[j])) {
+                    match = false;
+                }
+            }
+            var selectedGroup = null;
+            if (group.selectedIndex > 0) {
+                selectedGroup = groups[group.selectedIndex - 1];
+            }
+            if (selectedGroup !== null) {
+                if (users[i].groups.indexOf(selectedGroup) === -1) {
                     match = false;
                 }
             }
@@ -147,8 +171,10 @@ function make_search_form(textarea, rows, users) {
         }
     }
     query.addEventListener('change', update, false);
+    group.addEventListener('change', update, false);
     query.addEventListener('input', update, false);
     form.appendChild(query);
+    form.appendChild(group);
     update();
     return form;
 }
@@ -267,13 +293,13 @@ function parseUserGroupList() {
     var users = rows.map(rowToUser);
     var textarea = add_json_as_textarea(userGroupList, users);
 
-    console.log(extract_groups(users));
+    var groups = extract_groups(users);
 
     var bbSearchForm = document.getElementsByName('searchForm')[0];
     add_show_all(bbSearchForm);
     redisplay_form(bbSearchForm);
 
-    var ourSearchForm = make_search_form(textarea, rows, users);
+    var ourSearchForm = make_search_form(textarea, rows, users, groups);
     bbSearchForm.parentNode.insertBefore(ourSearchForm, bbSearchForm);
     if (location.search.indexOf('liveFilterOnly') !== -1) {
         var header = document.getElementById('pageTitleText');
