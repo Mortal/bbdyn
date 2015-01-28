@@ -253,6 +253,13 @@ function add_show_all(bbSearchForm) {
     container.appendChild(label);
 }
 
+function keycmp(key) {
+    return function cmp(g1, g2) {
+        var k1 = key(g1), k2 = key(g2);
+        return (k1 < k2) ? -1 : (k1 > k2) ? 1 : 0;
+    }
+}
+
 function extract_groups(users) {
     var groups = [], i, j, gr;
     for (i = 0; i < users.length; i += 1) {
@@ -267,11 +274,7 @@ function extract_groups(users) {
         var is_class = group.indexOf('Hold') !== -1;
         return [is_class ? 0 : 1, group];
     }
-    function keycmp(g1, g2) {
-        var k1 = key(g1), k2 = key(g2);
-        return (k1 < k2) ? -1 : (k1 > k2) ? 1 : 0;
-    }
-    groups.sort(keycmp);
+    groups.sort(keycmp(key));
     return groups;
 }
 
