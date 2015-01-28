@@ -115,7 +115,9 @@ function make_search_form(textarea, rows, users, groups) {
             selectedCountRoles = {},
             i,
             j,
-            match;
+            match,
+            hidden = document.createDocumentFragment(),
+            tbody = rows[0].parentNode;
 
         // Show/hide rows one by one
         for (i = 0; i < rows.length; i += 1) {
@@ -136,15 +138,28 @@ function make_search_form(textarea, rows, users, groups) {
             }
             rows[i].style.display = match ? '' : 'none';
             if (match) {
-                selected.push(users[i]);
+                selected.push(i);
                 selectedCount += 1;
                 selectedCountRoles[users[i].role] =
                     (selectedCountRoles[users[i].role] || 0) + 1;
+            } else {
+                hidden.appendChild(rows[i]);
             }
         }
 
+        function key(i) {
+            return [users[i].groups.join(' '), users[i].first, users[i].last];
+        }
+        selected.sort(keycmp(key));
+
+        for (var i = 0; i < selected.length; ++i) {
+            tbody.appendChild(rows[selected[i]]);
+        }
+        tbody.appendChild(hidden);
+
         // For debugging / further processing
-        textarea.value = JSON.stringify(selected);
+        textarea.value = JSON.stringify(selected.map(
+            function (i) { return users[i]; }));
 
         // Update paging text
         var selectedRoles = [];
