@@ -108,6 +108,8 @@ function make_search_form(textarea, rows, users, groups) {
     }
 
     function update() {
+        if (rows.length == 0) return;
+
         var q = query.value.trim().toLowerCase().replace(/ +/g, ' '),
             words = q.split(' '),
             selected = [],
@@ -309,7 +311,7 @@ function parseUserGroupList() {
     }
 
     var tbody = document.getElementById('userGroupList_databody');
-    var rows = [].slice.call(tbody.rows);
+    var rows = tbody ? [].slice.call(tbody.rows) : [];
     var users = rows.map(rowToUser);
     var textarea = add_json_as_textarea(userGroupList, users);
 
