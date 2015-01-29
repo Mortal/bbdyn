@@ -327,7 +327,7 @@ function parseUserGroupList() {
         var header = document.getElementById('pageTitleText');
         header.textContent = TR.title;
         window.top.document.title = document.title = header.textContent;
-        bbSearchForm.parentNode.removeChild(bbSearchForm);
+        bbSearchForm.style.display = 'none';
     }
 }
 
