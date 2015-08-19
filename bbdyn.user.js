@@ -12,7 +12,7 @@
 'use strict';
 
 var LANG = document.documentElement.lang;
-if (LANG === 'en-GB') {
+if (LANG.substring(0, 2) === 'en') {
     var TR = {
         'showAll': 'All on 1 page',
         'liveQuery': 'Filter:',
