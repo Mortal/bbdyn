@@ -52,6 +52,8 @@ function rowToUser(row) {
         groups = [].slice.call(groupElements).map(getText);
     groups.pop(); // "Add Group"
 
+    username = username.replace(/\n/g, '').replace(/.*\s/, '');
+
     search_string = (username + ' ' + first + ' ' + last + ' '
             + groups.join(' '));
 
