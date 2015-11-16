@@ -304,30 +304,33 @@ function extract_groups(users) {
 }
 
 function add_export_group_list(form, users) {
-    var btn = document.createElement('button');
-    btn.innerHTML = TR.export_group_list;
-    btn.addEventListener('click', function (ev) {
-        ev.preventDefault();
-        var s = [];
-        s.push([TR.csv_username_header, TR.csv_groups_header].join('\t'));
-        for (var i = 0; i < users.length; ++i) {
-            var special_roles = [
-                'Instructor', 'Teaching Assistant',
-                'Underviser', 'Undervisningsassistent'
-            ];
-            if (special_roles.indexOf(users[i].role) !== -1) {
-                // Skip these roles, as the grade center doesn't want them
-                continue;
-            }
-            if (users[i].groups.length == 0) {
-                // Hide users in no groups
-                continue;
-            }
-            s.push([users[i].username, users[i].groups.join(' ')].join('\t'));
+    var s = [];
+    s.push([TR.csv_username_header, TR.csv_groups_header].join('\t'));
+    for (var i = 0; i < users.length; ++i) {
+        var special_roles = [
+            'Instructor', 'Teaching Assistant',
+            'Underviser', 'Undervisningsassistent'
+        ];
+        if (special_roles.indexOf(users[i].role) !== -1) {
+            // Skip these roles, as the grade center doesn't want them
+            continue;
         }
-        window.open('data:text/plain;base64,' + btoa(s.join('\n')));
-    }, false);
-    form.appendChild(btn);
+        if (users[i].groups.length == 0) {
+            // Hide users in no groups
+            continue;
+        }
+        s.push([users[i].username, users[i].groups.join(' ')].join('\t'));
+    }
+    var url = 'data:text/plain;base64,' + btoa(s.join('\n'));
+
+    var link = document.createElement('a');
+    link.setAttribute('download', 'groups.csv');
+    link.setAttribute('href', url);
+    link.style.display = 'inline-block';
+    link.style.margin = '0px 14px';
+    link.innerHTML = TR.export_group_list;
+
+    form.appendChild(link);
 }
 
 function parseUserGroupList() {
