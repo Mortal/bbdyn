@@ -19,6 +19,9 @@ if (LANG.substring(0, 2) === 'en') {
         'title': 'Find people in groups',
         'paging': 'Displaying <strong>{m}</strong> of <strong>{n}</strong>; {roles}',
         'choose_group': '(choose group)',
+        'export_group_list': 'Export group list',
+        'csv_username_header': 'Username',
+        'csv_groups_header': 'Group',
         '': ''
     };
 } else {
@@ -28,6 +31,9 @@ if (LANG.substring(0, 2) === 'en') {
         'title': 'Søg brugere i grupper',
         'paging': 'Viser <strong>{m}</strong> af <strong>{n}</strong>; {roles}',
         'choose_group': '(vælg gruppe)',
+        'export_group_list': 'Eksporter gruppeliste',
+        'csv_username_header': 'Brugernavn',
+        'csv_groups_header': 'Gruppe',
         '': ''
     };
 }
@@ -299,13 +305,17 @@ function extract_groups(users) {
 
 function add_export_group_list(form, users) {
     var btn = document.createElement('button');
-    btn.innerHTML = 'Export group list';
+    btn.innerHTML = TR.export_group_list;
     btn.addEventListener('click', function (ev) {
         ev.preventDefault();
         var s = [];
-        s.push(['Username', 'Groups'].join('\t'));
+        s.push([TR.csv_username_header, TR.csv_groups_header].join('\t'));
         for (var i = 0; i < users.length; ++i) {
-            if (users[i].role == 'Instructor' || users[i].role == 'Teaching Assistant') {
+            var special_roles = [
+                'Instructor', 'Teaching Assistant',
+                'Underviser', 'Undervisningsassistent'
+            ];
+            if (special_roles.indexOf(users[i].role) !== -1) {
                 // Skip these roles, as the grade center doesn't want them
                 continue;
             }
