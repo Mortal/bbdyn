@@ -328,6 +328,9 @@ function parseUserGroupList() {
     if (location.search.indexOf('toggleType=users') === -1) {
         return;
     }
+    if (location.search.indexOf('liveFilterOnly') === -1) {
+        return;
+    }
 
     var userGroupList = document.getElementById('userGroupList');
     if (!userGroupList) {
@@ -349,12 +352,12 @@ function parseUserGroupList() {
     var ourSearchForm = make_search_form(textarea, rows, users, groups);
     add_export_group_list(ourSearchForm, users);
     bbSearchForm.parentNode.insertBefore(ourSearchForm, bbSearchForm);
-    if (location.search.indexOf('liveFilterOnly') !== -1) {
-        var header = document.getElementById('pageTitleText');
-        header.textContent = TR.title;
-        window.top.document.title = document.title = header.textContent;
-        bbSearchForm.style.display = 'none';
-    }
+
+    var header = document.getElementById('pageTitleText');
+    header.textContent = TR.title;
+    window.top.document.title = document.title = header.textContent;
+
+    bbSearchForm.style.display = 'none';
 }
 
 function get_course_id() {
