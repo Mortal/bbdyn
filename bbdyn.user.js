@@ -297,6 +297,29 @@ function extract_groups(users) {
     return groups;
 }
 
+function add_export_group_list(form, users) {
+    var btn = document.createElement('button');
+    btn.innerHTML = 'Export group list';
+    btn.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        var s = [];
+        s.push(['Username', 'Groups'].join('\t'));
+        for (var i = 0; i < users.length; ++i) {
+            if (users[i].role == 'Instructor' || users[i].role == 'Teaching Assistant') {
+                // Skip these roles, as the grade center doesn't want them
+                continue;
+            }
+            if (users[i].groups.length == 0) {
+                // Hide users in no groups
+                continue;
+            }
+            s.push([users[i].username, users[i].groups.join(' ')].join('\t'));
+        }
+        window.open('data:text/plain;base64,' + btoa(s.join('\n')));
+    }, false);
+    form.appendChild(btn);
+}
+
 function parseUserGroupList() {
     var targetPage = '/webapps/bb-group-mgmt-LEARN/execute/groupInventoryList';
     if (location.pathname !== targetPage) {
@@ -324,6 +347,7 @@ function parseUserGroupList() {
     redisplay_form(bbSearchForm);
 
     var ourSearchForm = make_search_form(textarea, rows, users, groups);
+    add_export_group_list(ourSearchForm, users);
     bbSearchForm.parentNode.insertBefore(ourSearchForm, bbSearchForm);
     if (location.search.indexOf('liveFilterOnly') !== -1) {
         var header = document.getElementById('pageTitleText');
