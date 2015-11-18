@@ -303,9 +303,29 @@ function extract_groups(users) {
     return groups;
 }
 
+function csv_username(user) {
+    return user.username;
+}
+csv_username.header = TR.csv_username_header;
+function csv_groups(user) {
+    return user.groups.join(' ');
+}
+csv_groups.header = TR.csv_groups_header;
+
 function add_export_group_list(form, users) {
+    function get_column_header(column) {
+        return column.header;
+    }
+    function get_column_value(user) {
+        function f(column) {
+            return column(user);
+        }
+        return f;
+    }
+
     var s = [];
-    s.push([TR.csv_username_header, TR.csv_groups_header].join('\t'));
+    var columns = [csv_username, csv_groups];
+    s.push(columns.map(get_column_header).join('\t'));
     for (var i = 0; i < users.length; ++i) {
         var special_roles = [
             'Instructor', 'Teaching Assistant',
@@ -319,7 +339,8 @@ function add_export_group_list(form, users) {
             // Hide users in no groups
             continue;
         }
-        s.push([users[i].username, users[i].groups.join(' ')].join('\t'));
+
+        s.push(columns.map(get_column_value(users[i])).join('\t'));
     }
     var url = 'data:text/plain;base64,' + btoa(s.join('\n'));
 
