@@ -22,6 +22,7 @@ if (LANG.substring(0, 2) === 'en') {
         'export_group_list': 'Export group list',
         'csv_username_header': 'Username',
         'csv_groups_header': 'Group',
+        'csv_name_header': 'Name',
         '': ''
     };
 } else {
@@ -34,6 +35,7 @@ if (LANG.substring(0, 2) === 'en') {
         'export_group_list': 'Eksporter gruppeliste',
         'csv_username_header': 'Brugernavn',
         'csv_groups_header': 'Gruppe',
+        'csv_name_header': 'Navn',
         '': ''
     };
 }
@@ -311,6 +313,10 @@ function csv_groups(user) {
     return user.groups.join(' ');
 }
 csv_groups.header = TR.csv_groups_header;
+function csv_name(user) {
+    return user.first + ' ' + user.last;
+}
+csv_name.header = TR.csv_name_header;
 
 function add_export_group_list(form, users) {
     function get_column_header(column) {
@@ -324,7 +330,7 @@ function add_export_group_list(form, users) {
     }
 
     var s = [];
-    var columns = [csv_username, csv_groups];
+    var columns = [csv_username, csv_name, csv_groups];
     s.push(columns.map(get_column_header).join('\t'));
     for (var i = 0; i < users.length; ++i) {
         var special_roles = [
