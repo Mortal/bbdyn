@@ -20,9 +20,12 @@ if (LANG.substring(0, 2) === 'en') {
         'paging': 'Displaying <strong>{m}</strong> of <strong>{n}</strong>; {roles}',
         'choose_group': '(choose group)',
         'export_group_list': 'Export group list',
+        'export_student_list': 'Export student list',
         'csv_username_header': 'Username',
         'csv_groups_header': 'Group',
         'csv_name_header': 'Name',
+        'csv_first_name_header': 'First Name',
+        'csv_last_name_header': 'Last Name',
         '': ''
     };
 } else {
@@ -33,9 +36,12 @@ if (LANG.substring(0, 2) === 'en') {
         'paging': 'Viser <strong>{m}</strong> af <strong>{n}</strong>; {roles}',
         'choose_group': '(vælg gruppe)',
         'export_group_list': 'Eksporter gruppeliste',
+        'export_student_list': 'Eksporter liste af studerende',
         'csv_username_header': 'Brugernavn',
         'csv_groups_header': 'Gruppe',
         'csv_name_header': 'Navn',
+        'csv_first_name_header': 'Fornavn',
+        'csv_last_name_header': 'Efternavn',
         '': ''
     };
 }
@@ -317,6 +323,14 @@ function csv_name(user) {
     return user.first + ' ' + user.last;
 }
 csv_name.header = TR.csv_name_header;
+function csv_first_name(user) {
+    return user.first;
+}
+csv_first_name.header = TR.csv_first_name_header;
+function csv_last_name(user) {
+    return user.last;
+}
+csv_last_name.header = TR.csv_last_name_header;
 
 function csv_is_student(user) {
     var special_roles = [
@@ -369,6 +383,13 @@ function add_export_group_list(form, users) {
     add_export_link(form, data, 'groups.csv', TR.export_group_list);
 }
 
+function add_export_student_list(form, users) {
+    var columns = [csv_username, csv_first_name, csv_last_name];
+    var filters = [csv_is_student];
+    var data = generate_export(users, columns, filters, ',');
+    add_export_link(form, data, 'students.csv', TR.export_student_list);
+}
+
 function parseUserGroupList() {
     var targetPage = '/webapps/bb-group-mgmt-LEARN/execute/groupInventoryList';
     if (location.pathname !== targetPage) {
@@ -400,6 +421,7 @@ function parseUserGroupList() {
 
     var ourSearchForm = make_search_form(textarea, rows, users, groups);
     add_export_group_list(ourSearchForm, users);
+    add_export_student_list(ourSearchForm, users);
     bbSearchForm.parentNode.insertBefore(ourSearchForm, bbSearchForm);
 
     var header = document.getElementById('pageTitleText');
