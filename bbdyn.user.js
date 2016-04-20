@@ -384,7 +384,7 @@ function add_export_group_list(form, users) {
 }
 
 function add_export_student_list(form, users) {
-    var columns = [csv_username, csv_first_name, csv_last_name];
+    var columns = [csv_username, csv_first_name, csv_last_name, csv_groups];
     var filters = [csv_is_student];
     var data = generate_export(users, columns, filters, ',');
     add_export_link(form, data, 'students.csv', TR.export_student_list);
