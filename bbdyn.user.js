@@ -319,10 +319,6 @@ function csv_groups(user) {
     return user.groups.join(' ');
 }
 csv_groups.header = TR.csv_groups_header;
-function csv_name(user) {
-    return user.first + ' ' + user.last;
-}
-csv_name.header = TR.csv_name_header;
 function csv_first_name(user) {
     return user.first;
 }
@@ -331,6 +327,10 @@ function csv_last_name(user) {
     return user.last;
 }
 csv_last_name.header = TR.csv_last_name_header;
+function csv_name(user) {
+    return csv_first_name(user) + ' ' + csv_last_name(user);
+}
+csv_name.header = TR.csv_name_header;
 
 function csv_is_student(user) {
     var special_roles = [
