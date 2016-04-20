@@ -414,10 +414,6 @@ function parseUserGroupList() {
     add_export_student_list(ourSearchForm, users);
     bbSearchForm.parentNode.insertBefore(ourSearchForm, bbSearchForm);
 
-    var header = document.getElementById('pageTitleText');
-    header.textContent = TR.title;
-    window.top.document.title = document.title = header.textContent;
-
     bbSearchForm.style.display = 'none';
 }
 
@@ -494,7 +490,5 @@ function amendMenu() {
 parseUserGroupList();
 
 amendMenu();
-
-window.top.document.title = document.title;
 
 // vim: set ts=4 sw=4 sts=4 et:
