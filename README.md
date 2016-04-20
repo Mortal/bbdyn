@@ -1,10 +1,13 @@
 # Blackboard improvements
 
 This script improves the Blackboard functionality for Instructors and TAs
-at Aarhus University by adding the following features:
+at Aarhus University by adding the **Find users in groups** feature,
+enabling fast, flexible searching for students in the course.
 
-* "Find users in groups" -- fast, flexible searching for students
-* Useful window titles -- instead of just "Blackboard Learn"
+On this page, the **Export student list** link allows you to download a CSV
+file with all students in the course along with their AU ID and groups.
+This file can be imported into the Grade Centre to add a column with the group
+of each student.
 
 More features will be added when I figure out that I need them.
 
