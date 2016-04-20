@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name        BlackBoard improvements
-// @namespace   http://users-cs.au.dk/rav/bbdyn-dev/
+// @namespace   http://users-cs.au.dk/rav/
 // @description Adds live filtering and search form redisplay
 // @include     https://bb.au.dk/*
-// @version     0.6pre1
+// @version     0.7
 // @grant       GM_xmlhttpRequest
 // @grant       GM_log
 // @updateURL   https://github.com/Mortal/bbdyn/raw/stable/bbdyn.user.js
