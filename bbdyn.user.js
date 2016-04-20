@@ -376,13 +376,6 @@ function add_export_link(form, data, filename, linkText) {
     form.appendChild(link);
 }
 
-function add_export_group_list(form, users) {
-    var columns = [csv_username, csv_name, csv_groups];
-    var filters = [csv_is_student, csv_has_group];
-    var data = generate_export(users, columns, filters, '\t');
-    add_export_link(form, data, 'groups.csv', TR.export_group_list);
-}
-
 function add_export_student_list(form, users) {
     var columns = [csv_username, csv_first_name, csv_last_name, csv_groups];
     var filters = [csv_is_student];
@@ -420,7 +413,6 @@ function parseUserGroupList() {
     redisplay_form(bbSearchForm);
 
     var ourSearchForm = make_search_form(textarea, rows, users, groups);
-    add_export_group_list(ourSearchForm, users);
     add_export_student_list(ourSearchForm, users);
     bbSearchForm.parentNode.insertBefore(ourSearchForm, bbSearchForm);
 
